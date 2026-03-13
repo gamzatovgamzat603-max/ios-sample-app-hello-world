@@ -1,29 +1,50 @@
-//
-//  ContentView.swift
-//  hello-world
-//
-//  Created by Rob Hedgpeth on 5/5/22.
-//
+import Foundation
 
-import SwiftUI
+let arrows = ["<", "v", "^", ">"]
+var score = 0
+var hp = 100
+var isPlaying = true
 
-struct ContentView: View {
-    var body: some View {
-        ZStack{
-            Color("Bitrise Purple").ignoresSafeArea()
-            VStack{
-                Image("logo")
-                Text("Hello, Bitrisers!")
-                    .font(.largeTitle)
-                    .foregroundColor(.white)
-                    .padding()
-            }
-        }
-    }
-}
+// --- СЦЕНКА ПЕРЕД БОЕМ ---
+print("Boyfriend: Beep Boop?")
+Thread.sleep(forTimeInterval: 1.0)
+print("Daddy Dearest: Ха! Попробуй повтори это в консоли!")
+Thread.sleep(forTimeInterval: 1.5)
+print("\n3... 2... 1... GO!")
+Thread.sleep(forTimeInterval: 1.0)
 
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView()
-    }
+// --- БЕСКОНЕЧНЫЙ ЦИКЛ ---
+while isPlaying {
+	if hp <= 0 {
+		print("\n💀 ТЫ ПРОИГРАЛ! Твой финальный счет: \(score)")
+		isPlaying = false
+		break
+	}
+
+	let currentArrow = arrows.randomElement()!
+
+	// Рисуем статус
+	let hpBar = String(repeating: "❤️", count: hp / 20)
+	print("\n--------------------------")
+	print("HP: \(hpBar) | SCORE: \(score)")
+	print("НАЖМИ: [ \(currentArrow) ]")
+	print("--------------------------")
+
+	let startTime = Date()
+
+	if let input = readLine() {
+		let timeTaken = Date().timeIntervalSince(startTime)
+
+		if input == currentArrow && timeTaken < 2.0 {
+			print("✨ В ТОЧКУ! (-0.2 сек)")
+			score += 100
+			hp = min(100, hp + 5)  // Немного лечимся
+		} else {
+			print("❌ МИМО ИЛИ МЕДЛЕННО!")
+			hp -= 25  // Отнимаем четверть здоровья
+		}
+	}
+
+	// Небольшая пауза между стрелками
+	Thread.sleep(forTimeInterval: 0.2)
 }
